@@ -1,10 +1,9 @@
 import Credentials from "next-auth/providers/credentials";
-import type { NextAuthConfig, Session, User } from "next-auth";
-import type { AdapterUser } from "next-auth/adapters";
-import type { JWT } from "next-auth/jwt";
+import type { NextAuthConfig } from "next-auth";
 import dbConnect from "@/lib/dbConnect";
 import bcrypt from "bcryptjs";
 import UserModel from "@/model/user.model";
+import NextAuth from "next-auth";
 
 export const authOptions: NextAuthConfig = {
   providers: [
@@ -18,6 +17,7 @@ export const authOptions: NextAuthConfig = {
       },
       async authorize(credentials): Promise<any> {
         await dbConnect();
+        console.log(`Credentials: ${JSON.stringify(credentials)}\n\n`);
         try {
           const user = await UserModel.findOne({
             $or: [
@@ -51,29 +51,43 @@ export const authOptions: NextAuthConfig = {
   ],
 
   pages: { signIn: "/sign-in" },
-  session: { strategy: "jwt" },
+  session: { strategy: "jwt" as const },
 
   callbacks: {
     async jwt({ token, user }) {
-      if (user) {
-        token._id = user._id?.toString();
-        token.isVerified = user.isVerified;
-        token.isAcceptingMessages = user.isAcceptingMessages;
-        token.username = user.username;
+      try {
+        if (user) {
+          token._id = user._id?.toString();
+          token.isVerified = user.isVerified;
+          token.isAcceptingMessages = user.isAcceptingMessages;
+          token.username = user.username;
+        }
+        return token;
+      } catch (error) {
+        console.error("Error in jwt callback", error);
+        return token;
       }
-      return token;
     },
 
     async session({ session, token }) {
-      if (token) {
-        session.user._id = token._id;
-        session.user.isVerified = token.isVerified;
-        session.user.isAcceptingMessages = token.isAcceptingMessages;
-        session.user.username = token.username;
+      try {
+        if (!session.user) {
+          session.user = {} as any;
+        }
+        session.user._id = token._id as string;
+        session.user.isVerified = token.isVerified as boolean;
+        session.user.isAcceptingMessages = token.isAcceptingMessages as boolean;
+        session.user.username = token.username as string;
+
+        return session;
+      } catch (error) {
+        console.error("Error in session callback", error);
+        return session;
       }
-      return session;
     },
   },
 
   secret: process.env.NEXTAUTH_SECRET,
 };
+
+export const { handlers, auth, signIn, signOut } = NextAuth(authOptions);

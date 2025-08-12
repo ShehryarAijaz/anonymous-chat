@@ -15,6 +15,19 @@ export async function POST(request: Request) {
   try {
     const { username, email, password } = await request.json();
 
+    // Validate required fields
+    if (!username || !email || !password) {
+      return Response.json(
+        {
+          success: false,
+          message: "Username, email, and password are required",
+        },
+        {
+          status: 400,
+        }
+      );
+    }
+
     // 1. Username taken & verified? --> reject
     const existingUserByUsername = await UserModel.findOne({
       username,
