@@ -82,6 +82,9 @@ export async function POST(request: Request) {
           username,
           verifyCode
         );
+        
+        console.log("Email response (existing user):", emailResponse);
+        
         if (emailResponse.success) {
           return Response.json({
             success: true,
@@ -93,6 +96,7 @@ export async function POST(request: Request) {
             messages: [],
           });
         } else {
+          console.error("Failed to send verification email (existing user):", emailResponse.message);
           return Response.json(
             {
               success: false,
@@ -132,6 +136,9 @@ export async function POST(request: Request) {
         username,
         verifyCode
       );
+      
+      console.log("Email response:", emailResponse);
+      
       if (emailResponse.success) {
         return Response.json({
           success: true,
@@ -143,6 +150,7 @@ export async function POST(request: Request) {
           messages: [],
         });
       } else {
+        console.error("Failed to send verification email:", emailResponse.message);
         return Response.json(
           {
             success: false,
