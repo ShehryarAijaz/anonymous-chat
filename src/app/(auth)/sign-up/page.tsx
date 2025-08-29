@@ -75,7 +75,11 @@ const page = () => {
         setIsUsernameAvailable(false);
       }
     };
-    checkUsernameAvailability();
+    if (username.trim().length > 0) {
+      checkUsernameAvailability();
+    } else {
+      setUsernameMessage("")
+    }
   }, [username]);
 
   const onSubmit = async (data: z.infer<typeof signUpSchema>) => {

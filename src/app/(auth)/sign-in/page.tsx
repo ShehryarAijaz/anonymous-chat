@@ -1,8 +1,106 @@
-import React from 'react'
+'use client'
+import { signInSchema } from '@/schemas/signin.schema'
+import { ApiResponse } from '@/types/ApiResponse'
+import { zodResolver } from '@hookform/resolvers/zod'
+import axios, { AxiosError } from 'axios'
+import { useRouter } from 'next/navigation'
+import React, { useState } from 'react'
+import { toast } from 'sonner'
+import { useForm } from 'react-hook-form'
+import z from 'zod'
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
+import { Input } from '@/components/ui/input'
+import { Button } from '@/components/ui/button'
+import Link from 'next/link'
 
 const page = () => {
+  const router = useRouter()
+  const [isSubmitting, setIsSubmitting] = useState(false)
+  const [isLoading, setIsLoading] = useState(false)
+  const [error, setError] = useState<string | null>(null)
+  const form = useForm<z.infer<typeof signInSchema>>({
+    resolver: zodResolver(signInSchema),
+    defaultValues: {
+      email: '',
+      password: ''
+    }
+  })
+
+  const onSubmit = async (data: z.infer<typeof signInSchema>) => {
+    setIsSubmitting(true)
+    setIsLoading(true)
+
+    try {
+      const response = await axios.post(`/api/signin`, data)
+
+      if (response.data.success) {
+        toast.success(response.data.message)
+        router.replace("/")
+        setIsSubmitting(false)
+      }
+
+    } catch (error) {
+      console.error("ERROR IN ONSUBMIT: ", error)
+      const axiosError = error as AxiosError<ApiResponse>
+      setError(axiosError.response?.data.message ?? "Something went wrong")
+      toast.error(axiosError.response?.data.message ?? "Something went wrong")
+    } finally {
+      setIsSubmitting(false)
+      setIsLoading(false)
+    }
+  }
+
   return (
-    <div>page</div>
+    <div className="flex justify-center items-center min-h-screen bg-gray-100">
+      <div className="w-full max-w-md p-8 space-y-8 bg-white rounded-lg shadow-md">
+        <div className="text-center">
+          <h1 className="text-2xl font-bold mb-2">Sign In</h1>
+          <Form {...form}>
+            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+              <FormField
+                control={form.control}
+                name="email"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Email</FormLabel>
+                    <FormControl>
+                      <Input placeholder="Enter your email" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="password"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Password</FormLabel>
+                    <FormControl>
+                      <Input placeholder="Enter your password" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              {error && <p className="text-red-500">{error}</p>}
+              <Button type="submit" disabled={isSubmitting}>
+                {isSubmitting ? "Signing in..." : "Sign In"}
+              </Button>
+            </form>
+          </Form>
+          <p className="text-sm text-gray-500 mt-4">
+            Don't have an account?{" "}
+            <Link
+              href="/sign-up"
+              className="text-blue-500 hover:text-blue-700 duration-300 transition-all"
+            >
+              Sign Up
+            </Link>
+          </p>
+        </div>
+      </div>
+    </div>
   )
 }
 
