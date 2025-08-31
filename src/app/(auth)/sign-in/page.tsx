@@ -1,8 +1,6 @@
 'use client'
 import { signInSchema } from '@/schemas/signin.schema'
-import { ApiResponse } from '@/types/ApiResponse'
 import { zodResolver } from '@hookform/resolvers/zod'
-import axios, { AxiosError } from 'axios'
 import { useRouter } from 'next/navigation'
 import React, { useState } from 'react'
 import { toast } from 'sonner'
@@ -12,12 +10,13 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
 import Link from 'next/link'
+import { signIn } from 'next-auth/react'
 
 const page = () => {
   const router = useRouter()
   const [isSubmitting, setIsSubmitting] = useState(false)
-  const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
+  
   const form = useForm<z.infer<typeof signInSchema>>({
     resolver: zodResolver(signInSchema),
     defaultValues: {
@@ -28,25 +27,28 @@ const page = () => {
 
   const onSubmit = async (data: z.infer<typeof signInSchema>) => {
     setIsSubmitting(true)
-    setIsLoading(true)
+    setError(null)
 
     try {
-      const response = await axios.post(`/api/signin`, data)
+      const result = await signIn('credentials', {
+        email: data.email,
+        password: data.password,
+        redirect: false,
+      })
 
-      if (response.data.success) {
-        toast.success(response.data.message)
+      if (result?.error) {
+        setError(result.error)
+        toast.error(result.error)
+      } else if (result?.ok) {
+        toast.success('Signed in successfully!')
         router.replace("/")
-        setIsSubmitting(false)
       }
-
     } catch (error) {
       console.error("ERROR IN ONSUBMIT: ", error)
-      const axiosError = error as AxiosError<ApiResponse>
-      setError(axiosError.response?.data.message ?? "Something went wrong")
-      toast.error(axiosError.response?.data.message ?? "Something went wrong")
+      setError("Something went wrong")
+      toast.error("Something went wrong")
     } finally {
       setIsSubmitting(false)
-      setIsLoading(false)
     }
   }
 
