@@ -99,7 +99,7 @@ export async function GET() {
         return Response.json({
             success: true,
             message: "Message acceptance fetched successfully",
-            data: userData.isAcceptingMessages
+            isAcceptingMessages: userData.isAcceptingMessages
         },
         {
             status: 200
