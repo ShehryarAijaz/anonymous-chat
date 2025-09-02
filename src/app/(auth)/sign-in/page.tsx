@@ -41,7 +41,7 @@ const page = () => {
         toast.error(result.error)
       } else if (result?.ok) {
         toast.success('Signed in successfully!')
-        router.replace("/")
+        router.replace("/dashboard")
       }
     } catch (error) {
       console.error("ERROR IN ONSUBMIT: ", error)
