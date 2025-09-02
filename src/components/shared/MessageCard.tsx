@@ -32,6 +32,7 @@ type MessageCardProps = {
     onMessageDelete: (messageId: string) => void
 }
 
+// Flow: The dashboard sends me the message and a calls a function that have a message id as a parameter
 const MessageCard = ({ message, onMessageDelete }: MessageCardProps) => {
 
     const [error, setError] = useState<string | null>(null)
@@ -59,23 +60,23 @@ const MessageCard = ({ message, onMessageDelete }: MessageCardProps) => {
     }
 
   return (
-    <div className="min-h-screen w-full flex flex-col justify-center">
+    <div className="min-h-screen w-full flex justify-center items-center">
       <Card className="w-full max-w-md p-4">
         <CardHeader>
-          <CardTitle>Message</CardTitle>
           <CardContent>
-          <Input />
+          <CardTitle className="text-xl font-bold">{message.content}</CardTitle>
+          <p className="text-sm text-gray-500">{message.createdAt.toLocaleString().split("T")[0]}</p>
         </CardContent>
           <AlertDialog>
             <AlertDialogTrigger asChild>
-              <Button variant="outline">Send Message</Button>
+              <Button variant="destructive" className="w-1/2 mx-auto">Delete</Button>
             </AlertDialogTrigger>
             <AlertDialogContent>
               <AlertDialogHeader>
                 <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
                 <AlertDialogDescription>
                   This action cannot be undone. This will permanently delete
-                  your account and remove your data from our servers.
+                  the message and remove it from the database.
                 </AlertDialogDescription>
               </AlertDialogHeader>
               <AlertDialogFooter>

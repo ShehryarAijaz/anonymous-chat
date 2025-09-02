@@ -19,13 +19,14 @@ const DashboardPage = () => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [isSwitchLoading, setIsSwitchLoading] = useState<boolean>(false);
 
+
+  console.log("Messages: ", messages)
   // This function gets a messageId and filter out the messages from the array of messages by removing the message whose id matches with the id provided
   const handleDeleteMessage = (messageId: string) => {
     setMessages(messages.filter((message) => message._id !== messageId));
   };
 
-  const { data: session } = useSession();
-  console.log("Session:", session);
+  const { data: session, status } = useSession();
   const user = session?.user as User;
 
   // Initialize form that only accepts form that gets resolved by acceptMessageSchema
@@ -62,12 +63,11 @@ const DashboardPage = () => {
 
       try {
         const response = await axios.get("/api/get-messages");
+        console.log("Messages API Response:", response.data)
         if (response.data.success) {
-          setMessages(response.data.messages ?? []);
+          setMessages(response.data.data ?? []);
           if (refresh) {
-            toast.success(
-              response.data.message ?? "Messages fetched successfully"
-            );
+            toast.success(response.data.message);
           }
         } else {
           toast.error(response.data.message ?? "Failed to fetch messages");
@@ -94,6 +94,7 @@ const DashboardPage = () => {
 
   // Change the state of the acceptMessages in the backend whenever user toggles the switch
   const handleSwitchChange = async () => {
+    console.log("Switch Changed!")
     try {
       const response = await axios.post<ApiResponse>("/api/accept-messages", {
         acceptMessages: !acceptMessages,
@@ -113,23 +114,28 @@ const DashboardPage = () => {
     }
   };
 
-  // Destructure username from user object
+  // Check if session is loading or doesn't exist
+  if (status === "loading" || !session || !session.user)
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <div className="text-center">
+          <Loader2 className="h-8 w-8 animate-spin mx-auto mb-4" />
+          <p>Loading...</p>
+        </div>
+      </div>
+    );
+
+  // Destructure username from user object after session check
   const { username } = session?.user as User;
 
   const baseUrl = `${window.location.protocol}//${window.location.host}`;
   const profileUrl = `${baseUrl}/u/${username}`;
 
   const copyToClipboard = () => {
+    console.log("Button Clicked!")
     navigator.clipboard.writeText(profileUrl);
     toast.success("Copied to clipboard!");
   };
-
-  if (!session || !session.user)
-    return (
-      <div>
-        Loading...<Loader2></Loader2>
-      </div>
-    );
 
   return (
     <div className="my-8 mx-4 md:mx-8 lg:mx-auto p-6 bg-white rounded w-full max-w-6xl">
@@ -143,7 +149,7 @@ const DashboardPage = () => {
             disabled
             className="input input-bordered w-full p-2 mr-2"
           />
-          <Button onClick={() => copyToClipboard}>Copy</Button>
+          <Button onClick={copyToClipboard}>Copy</Button>
         </div>
       </div>
 
