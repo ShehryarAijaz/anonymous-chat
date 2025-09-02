@@ -147,7 +147,7 @@ const DashboardPage = () => {
             type="text"
             value={profileUrl}
             disabled
-            className="input input-bordered w-full p-2 mr-2"
+            className="bg-gray-100 rounded-lg input input-bordered w-full p-2 mr-2"
           />
           <Button onClick={copyToClipboard}>Copy</Button>
         </div>
@@ -181,7 +181,7 @@ const DashboardPage = () => {
         )}
       </Button>
 
-      <div className="mt-4 grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div className="mt-4 flex gap-6 flex-row">
         {messages.length > 0 ? (
           messages.map((message) => (
             <MessageCard
