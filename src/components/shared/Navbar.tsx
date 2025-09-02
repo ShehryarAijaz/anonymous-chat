@@ -9,9 +9,6 @@ import { ThemeModeToggle } from '@/components/shared/ThemeModeToggle'
 const Navbar = () => {
 
     const { data: session, status } = useSession()
-    console.log("DATA: ", session)
-    console.log("STATUS: ", status)
-
     const user = session?.user as User
 
   return (
@@ -20,18 +17,18 @@ const Navbar = () => {
         <a className='text-2xl font-bold' href="#">Anonymous Chat</a>
         {session ? (
           <>
-            <span className='text-sm text-gray-500'>Welcome, {user?.username || user?.email}</span>
+          <div className="flex items-center gap-3">
             <Button onClick={() => signOut()}>Logout</Button>
             <ThemeModeToggle />
-            </>
-          ) : (
-            <div className='flex gap-2 items-center'>
-              <Button asChild><Link href="/sign-in">Sign In</Link></Button>
-              <Button asChild><Link href="/sign-up">Sign Up</Link></Button>
-              <ThemeModeToggle />
-            </div>
-          )
-        }
+          </div>
+          </>
+        ) : (
+          <div className='flex gap-2 items-center'>
+            <Button asChild><Link href="/sign-in">Sign In</Link></Button>
+            <Button asChild><Link href="/sign-up">Sign Up</Link></Button>
+            <ThemeModeToggle />
+          </div>
+        )}
       </div>
     </nav>
   )
