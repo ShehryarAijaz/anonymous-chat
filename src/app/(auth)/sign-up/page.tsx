@@ -54,7 +54,6 @@ const page = () => {
         const response = await axios.get(
           `/api/verify-username?username=${username}`
         );
-        console.log("RESPONSE: ", response)
 
         if (response.status === 200) {
           setIsUsernameAvailable(true);
