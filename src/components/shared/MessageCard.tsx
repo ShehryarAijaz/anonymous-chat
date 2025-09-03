@@ -39,7 +39,6 @@ const MessageCard = ({ message, onMessageDelete, className }: MessageCardProps) 
     const [error, setError] = useState<string | null>(null)
 
     const handleDeleteConfirm = async () => {
-        console.log("Delete Confirmed")
         setError(null)
 
         try {

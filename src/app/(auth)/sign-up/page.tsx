@@ -94,7 +94,6 @@ const page = () => {
       }
 
     } catch (error) {
-      console.error("ERROR IN ONSUBMIT: ", error);
       const axiosError = error as AxiosError<ApiResponse>;
       toast.error(axiosError.response?.data.message ?? "Something went wrong");
 

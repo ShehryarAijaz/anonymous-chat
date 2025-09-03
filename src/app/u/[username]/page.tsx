@@ -61,7 +61,6 @@ const PublicMessagePage = () => {
 
           if (parsed.type === "text-delta" && parsed.delta) {
             accumulatedText += parsed.delta
-            console.log(accumulatedText)
           }
         } catch {
           // ignore JSON parse errors

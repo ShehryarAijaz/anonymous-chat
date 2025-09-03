@@ -44,7 +44,6 @@ const page = () => {
         router.replace("/dashboard")
       }
     } catch (error) {
-      console.error("ERROR IN ONSUBMIT: ", error)
       setError("Something went wrong")
       toast.error("Something went wrong")
     } finally {

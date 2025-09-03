@@ -6,9 +6,6 @@ export const resend = new Resend(process.env.RESEND_API_KEY);
 
 export async function sendVerificationEmail(email: string, username: string, verifyCode: string): Promise<ApiResponse> {
     try {
-        console.log("Attempting to send verification email to:", email);
-        console.log("Using Resend API key:", process.env.RESEND_API_KEY ? "Present" : "Missing");
-        
         const result = await resend.emails.send({
             from: 'Anonymous Chat <onboarding@resend.dev>',
             to: email,
@@ -16,7 +13,6 @@ export async function sendVerificationEmail(email: string, username: string, ver
             react: EmailVerification({username, otp: verifyCode})
         });
         
-        console.log("Resend API response:", result);
         return { success: true, message: "Verification email sent successfully!" }
     } catch (error: any) {
         console.error("Resend API error details:", {

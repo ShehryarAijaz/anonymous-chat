@@ -19,8 +19,6 @@ const DashboardPage = () => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [isSwitchLoading, setIsSwitchLoading] = useState<boolean>(false);
 
-
-  console.log("Messages: ", messages)
   // This function gets a messageId and filter out the messages from the array of messages by removing the message whose id matches with the id provided
   const handleDeleteMessage = (messageId: string) => {
     setMessages(messages.filter((message) => message._id !== messageId));
@@ -63,7 +61,6 @@ const DashboardPage = () => {
 
       try {
         const response = await axios.get("/api/get-messages");
-        console.log("Messages API Response:", response.data)
         if (response.data.success) {
           setMessages(response.data.data ?? []);
           if (refresh) {
@@ -94,7 +91,6 @@ const DashboardPage = () => {
 
   // Change the state of the acceptMessages in the backend whenever user toggles the switch
   const handleSwitchChange = async () => {
-    console.log("Switch Changed!")
     try {
       const response = await axios.post<ApiResponse>("/api/accept-messages", {
         acceptMessages: !acceptMessages,
@@ -132,7 +128,6 @@ const DashboardPage = () => {
   const profileUrl = `${baseUrl}/u/${username}`;
 
   const copyToClipboard = () => {
-    console.log("Button Clicked!")
     navigator.clipboard.writeText(profileUrl);
     toast.success("Copied to clipboard!");
   };
