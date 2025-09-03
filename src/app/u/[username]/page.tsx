@@ -115,10 +115,10 @@ const PublicMessagePage = () => {
   return (
     <div className="mx-4 my-8 p-6 md:mx-8 lg:mx-auto rounded w-full max-w-4xl">
       <div className="mt-4 flex justify-center">
-        <h1 className="text-4xl font-bold mb-4">Send Anonymous Message To Anyone</h1>
+        <h1 className="text-4xl font-bold mb-4 font-inter">Send Anonymous Message To Anyone</h1>
       </div>
       <div className="mt-4 flex flex-col">
-        <div className="flex flex-col gap-3">
+        <div className="flex flex-col gap-3 space-y-2">
           <Label htmlFor="message">Your message</Label>
           <Textarea
             placeholder="Type your message here."
@@ -150,7 +150,7 @@ const PublicMessagePage = () => {
               <CardHeader>
                 <CardTitle className="text-2xl">Messages</CardTitle>
               </CardHeader>
-              <CardContent className="flex flex-col space-y-2">
+              <CardContent className="flex flex-col space-y-4">
                 {(showAIMessages ? generatedMessages : genericMessages).map((message, index) => (
                   <Button
                     className="cursor-pointer"
