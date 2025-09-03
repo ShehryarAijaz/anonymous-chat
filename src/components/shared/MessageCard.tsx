@@ -30,10 +30,11 @@ import { Input } from "../ui/input";
 type MessageCardProps = {
     message: Message,
     onMessageDelete: (messageId: string) => void
+    className?: string
 }
 
 // Flow: The dashboard sends me the message and a calls a function that have a message id as a parameter
-const MessageCard = ({ message, onMessageDelete }: MessageCardProps) => {
+const MessageCard = ({ message, onMessageDelete, className }: MessageCardProps) => {
 
     const [error, setError] = useState<string | null>(null)
 
@@ -60,16 +61,17 @@ const MessageCard = ({ message, onMessageDelete }: MessageCardProps) => {
     }
 
   return (
-    <div className="min-h-screen w-full flex justify-center items-center">
-      <Card className="w-full max-w-md p-4">
+    <div className="w-full flex justify-center items-center">
+      <Card className={`w-full ${className}`}>
         <CardHeader>
           <CardContent>
           <CardTitle className="text-xl font-bold">{message.content}</CardTitle>
-          <p className="text-sm text-gray-500">{message.createdAt.toLocaleString().split("T")[0]}</p>
+          <p className="mt-2 text-sm text-gray-500">{message.createdAt.toLocaleString().split("T")[0]}</p>
         </CardContent>
+        <CardAction>
           <AlertDialog>
             <AlertDialogTrigger asChild>
-              <Button variant="destructive" className="w-1/2 mx-auto">Delete</Button>
+              <Button variant="destructive" className="cursor-pointer">X</Button>
             </AlertDialogTrigger>
             <AlertDialogContent>
               <AlertDialogHeader>
@@ -85,6 +87,7 @@ const MessageCard = ({ message, onMessageDelete }: MessageCardProps) => {
               </AlertDialogFooter>
             </AlertDialogContent>
           </AlertDialog>
+          </CardAction>
         </CardHeader>
       </Card>
     </div>
