@@ -138,7 +138,7 @@ const DashboardPage = () => {
   };
 
   return (
-    <div className="my-8 mx-4 md:mx-8 lg:mx-auto p-6 bg-white rounded w-full max-w-6xl">
+    <div className="my-8 mx-4 md:mx-8 lg:mx-auto p-6 rounded w-full max-w-6xl">
       <h1 className="text-4xl font-bold mb-4">Anonymous Chat</h1>
       <div className="mb-4">
         <h2 className="text-lg font-semibold mb-2">Copy Your Unique Link</h2>
@@ -147,7 +147,7 @@ const DashboardPage = () => {
             type="text"
             value={profileUrl}
             disabled
-            className="bg-gray-100 rounded-lg input input-bordered w-full p-2 mr-2"
+            className="bg-gray-100 text-black rounded-lg input input-bordered w-full p-2 mr-2"
           />
           <Button onClick={copyToClipboard}>Copy</Button>
         </div>
@@ -181,7 +181,7 @@ const DashboardPage = () => {
         )}
       </Button>
 
-      <div className="mt-4 flex gap-6 flex-row">
+      <div className="mt-4 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 justify-items-center">
         {messages.length > 0 ? (
           messages.map((message) => (
             <MessageCard
@@ -191,7 +191,7 @@ const DashboardPage = () => {
             />
           ))
         ) : (
-          <div className="col-span-2">
+          <div className="col-span-3">
             <p className="text-center text-gray-500">No messages found</p>
           </div>
         )}
