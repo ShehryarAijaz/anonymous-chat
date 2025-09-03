@@ -118,9 +118,9 @@ const PublicMessagePage = () => {
       </div>
       <div className="mt-4 flex flex-col">
         <div className="flex flex-col gap-3 space-y-2">
-          <Label htmlFor="message">Your message</Label>
+          <Label htmlFor="message">Send anonymous message to @{username}</Label>
           <Textarea
-            placeholder="Type your message here."
+            placeholder="Type your message here..."
             id="message"
             value={selectedMessage}
             onChange={(e) => setSelectedMessage(e.target.value)}
