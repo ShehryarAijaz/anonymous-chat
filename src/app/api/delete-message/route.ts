@@ -1,4 +1,4 @@
-import { auth } from "@/auth"
+import { auth } from "@/auth";
 import dbConnect from "@/lib/dbConnect";
 import UserModel, { User } from "@/model/user.model";
 import { messageSchema } from "@/schemas/message.schema";
@@ -15,18 +15,20 @@ export async function POST(request: Request) {
   const user = session?.user as User
 
   if (!session || !session.user) {
-      return Response.json({
-          success: false, message: "Unauthorized"
+    return Response.json(
+      {
+        success: false,
+        message: "Unauthorized"
       },
       {
-          status: 401
-      })
+        status: 401
+      }
+    );
   }
 
-  const userId = user._id
+  const userId = user._id;
 
   try {
-
     // Getting the messageId from the URL
     const { searchParams } = new URL(request.url);
     const queryParam = {
@@ -100,7 +102,6 @@ export async function POST(request: Request) {
         status: 200,
       }
     );
-
   } catch (error) {
     console.error("Failed to delete message", error);
 
