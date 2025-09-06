@@ -4,8 +4,6 @@ import {
   Card,
   CardAction,
   CardContent,
-  CardDescription,
-  CardFooter,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
@@ -25,7 +23,6 @@ import { Message } from "@/model/user.model";
 import { toast } from "sonner"
 import axios, { AxiosError } from "axios"
 import { ApiResponse } from "@/types/ApiResponse";
-import { Input } from "../ui/input";
 
 type MessageCardProps = {
     message: Message,
@@ -36,11 +33,7 @@ type MessageCardProps = {
 // Flow: The dashboard sends me the message and a calls a function that have a message id as a parameter
 const MessageCard = ({ message, onMessageDelete, className }: MessageCardProps) => {
 
-    const [error, setError] = useState<string | null>(null)
-
     const handleDeleteConfirm = async () => {
-        setError(null)
-
         try {
             const response = await axios.post(`/api/delete-message?message=${message._id}`)
             if (response.data.success) {
@@ -48,11 +41,9 @@ const MessageCard = ({ message, onMessageDelete, className }: MessageCardProps) 
                 onMessageDelete(message._id as string)
             } else {
                 toast.error(response.data.message)
-                setError(response.data.message)
             }
         } catch (error) {
             const axiosError = error as AxiosError<ApiResponse>;
-            setError(axiosError.response?.data.message ?? "Something went wrong")
             toast.error(axiosError.response?.data.message ?? "Something went wrong")
             console.error("ERROR IN HANDLEDELETECONFIRM: ", error)
         }

@@ -14,13 +14,14 @@ export async function sendVerificationEmail(email: string, username: string, ver
         });
         
         return { success: true, message: "Verification email sent successfully!" }
-    } catch (error: any) {
-        console.error("Resend API error details:", {
-            message: error.message,
-            statusCode: error.statusCode,
-            code: error.code,
-            stack: error.stack
-        });
-        return { success: false, message: `Failed to send verification email: ${error.message}` }
-    }
+    } catch (error) {
+        const message = error instanceof Error ? error.message : String(error);
+      
+        console.error("Resend API failed:", message);
+      
+        return {
+          success: false,
+          message: "Failed to send verification email. Please try again later.",
+        };
+      }
 }

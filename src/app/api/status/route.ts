@@ -1,6 +1,3 @@
-import dbConnect from "@/lib/dbConnect";
-import UserModel from "@/model/user.model";
-
 export async function GET(request: Request) {
     const routesToCheck = [
         '/dashboard',
@@ -27,17 +24,15 @@ export async function GET(request: Request) {
 
             const response = await fetch(url)
 
-            console.log(response)
-
             if (!response.ok) {
                 status = 'DOWN';
                 message = `HTTP Status: ${response.status} ${response.statusText}`;
                 overallStatus = 'DEGRADED';
             }
 
-        } catch (error: any) {
+        } catch (error) {
             status = 'DOWN';
-            message = `Fetch error: ${error.message}`;
+            message = `Fetch error: ${error instanceof Error ? error.message : 'Unknown error'}`;
             overallStatus = 'DEGRADED';
         }
 

@@ -11,8 +11,10 @@ import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
 import Link from 'next/link'
 import { signIn } from 'next-auth/react'
+import { AxiosError } from 'axios'
+import { ApiResponse } from '@/types/ApiResponse'
 
-const page = () => {
+const Page = () => {
   const router = useRouter()
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [error, setError] = useState<string | null>(null)
@@ -44,8 +46,9 @@ const page = () => {
         router.replace("/dashboard")
       }
     } catch (error) {
+      const axiosError = error as AxiosError<ApiResponse>;
+      toast.error(axiosError.response?.data.message ?? "Something went wrong");
       setError("Something went wrong")
-      toast.error("Something went wrong")
     } finally {
       setIsSubmitting(false)
     }
@@ -91,7 +94,7 @@ const page = () => {
             </form>
           </Form>
           <p className="text-sm text-gray-500 mt-4">
-            Don't have an account?{" "}
+            Don&apos;t have an account?{" "}
             <Link
               href="/sign-up"
               className="text-blue-500 hover:text-blue-700 duration-300 transition-all"
@@ -105,4 +108,4 @@ const page = () => {
   )
 }
 
-export default page
+export default Page;

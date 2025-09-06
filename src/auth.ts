@@ -17,7 +17,6 @@ export const authOptions: NextAuthConfig = {
       },
       async authorize(credentials): Promise<any> {
         await dbConnect();
-        console.log(`Credentials: ${JSON.stringify(credentials)}\n\n`);
         try {
           const user = await UserModel.findOne({
             $or: [
@@ -43,8 +42,8 @@ export const authOptions: NextAuthConfig = {
           } else {
             return user;
           }
-        } catch (error: any) {
-          throw new Error(error);
+        } catch (error) {
+          throw error;
         }
       },
     }),
@@ -57,6 +56,9 @@ export const authOptions: NextAuthConfig = {
     async jwt({ token, user }) {
       try {
         if (user) {
+          // Map MongoDB _id to a stable string id for NextAuth
+          // NextAuth expects session.user.id (string), so we copy _id -> token.sub
+          token.sub = user._id?.toString() || user.id
           token._id = user._id?.toString();
           token.isVerified = user.isVerified;
           token.isAcceptingMessages = user.isAcceptingMessages;
@@ -71,13 +73,14 @@ export const authOptions: NextAuthConfig = {
 
     async session({ session, token }) {
       try {
-        if (!session.user) {
-          session.user = {} as any;
-        }
-        session.user._id = token._id as string;
-        session.user.isVerified = token.isVerified as boolean;
-        session.user.isAcceptingMessages = token.isAcceptingMessages as boolean;
-        session.user.username = token.username as string;
+        // Only enhance the existing session.user (avoid constructing a new AdapterUser)
+        // Set the required id from token.sub and attach custom fields from the JWT
+        if (!session.user) return session;
+        session.user.id = (token.sub as string) || session.user.id;
+        (session.user as any)._id = token._id as string;
+        (session.user as any).isVerified = token.isVerified as boolean;
+        (session.user as any).isAcceptingMessages = token.isAcceptingMessages as boolean;
+        (session.user as any).username = token.username as string;
 
         return session;
       } catch (error) {

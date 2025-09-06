@@ -1,15 +1,12 @@
 "use client"
-import React, { useState, useEffect } from 'react'
+import React, { useState } from 'react'
 import { useParams } from 'next/navigation'
 import { Textarea } from "@/components/ui/textarea"
 import { Label } from "@/components/ui/label"
 import { Button } from '@/components/ui/button'
 import {
   Card,
-  CardAction,
   CardContent,
-  CardDescription,
-  CardFooter,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card"
@@ -62,8 +59,9 @@ const PublicMessagePage = () => {
           if (parsed.type === "text-delta" && parsed.delta) {
             accumulatedText += parsed.delta
           }
-        } catch {
-          // ignore JSON parse errors
+        } catch(error) {
+          const axiosError = error as AxiosError<ApiResponse>;
+          toast.error(axiosError.response?.data.message ?? "Something went wrong");
         }
       }
     }

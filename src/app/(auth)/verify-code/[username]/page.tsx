@@ -14,7 +14,7 @@ import {
 } from "@/components/ui/input-otp";
 import { REGEXP_ONLY_DIGITS } from "input-otp";
 
-const verifyCodePage = () => {
+const VerifyCodePage = () => {
   const router = useRouter();
   const params = useParams<{ username: string }>();
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -70,4 +70,4 @@ const verifyCodePage = () => {
   );
 };
 
-export default verifyCodePage;
+export default VerifyCodePage;
