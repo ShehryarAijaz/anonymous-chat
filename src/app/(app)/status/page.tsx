@@ -9,12 +9,11 @@ import {
 import { Separator } from "@/components/ui/separator";
 import axios from "axios";
 import { CheckCircle, XCircle } from "lucide-react";
-import Link from "next/link";
 import React, { useEffect, useState } from 'react'
 
 const StatusPage = () => {
 
-  const [results, setResults] = useState<any>([])
+  const [results, setResults] = useState<{route: string, status: string, message: string}[]>([])
 
 //   console.log("!!OVERALL STATUS!!", results.flat())
 
@@ -40,7 +39,7 @@ const StatusPage = () => {
                 </CardHeader>
                 <CardContent>
                    {flatData &&
-                   flatData.map((result: any, index: number) => (
+                   flatData.map((result: {route: string, status: string, message: string}, index: number) => (
                     <div key={index} className="space-y-2">
                         <h3 className="text-gray-400" >{result.route}</h3>
                         <span className="text-lg">{result.status === 'UP' ? <CheckCircle className="w-4 h-4 text-green-500" /> : <XCircle className="w-4 h-4 text-red-500" />}</span>

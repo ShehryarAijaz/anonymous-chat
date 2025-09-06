@@ -25,7 +25,6 @@ const DashboardPage = () => {
   };
 
   const { data: session, status } = useSession();
-  const user = session?.user as User;
 
   // Initialize form that only accepts form that gets resolved by acceptMessageSchema
   const form = useForm({

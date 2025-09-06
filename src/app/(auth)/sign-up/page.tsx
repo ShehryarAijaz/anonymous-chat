@@ -26,7 +26,6 @@ import { ApiResponse } from "@/types/ApiResponse";
 const Page = () => {
   const [username, setUsername] = useState("");
   const [isUsernameAvailable, setIsUsernameAvailable] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
   const [usernameMessage, setUsernameMessage] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const debounced = useDebounceCallback(setUsername, 500);

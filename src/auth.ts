@@ -1,5 +1,5 @@
 import Credentials from "next-auth/providers/credentials";
-import type { NextAuthConfig } from "next-auth";
+import type { NextAuthConfig, User } from "next-auth";
 import dbConnect from "@/lib/dbConnect";
 import bcrypt from "bcryptjs";
 import UserModel from "@/model/user.model";
@@ -15,7 +15,7 @@ export const authOptions: NextAuthConfig = {
         email: { label: "Email", type: "email" },
         password: { label: "Password", type: "password" },
       },
-      async authorize(credentials): Promise<any> {
+      async authorize(credentials): Promise<User | null> {
         await dbConnect();
         try {
           const user = await UserModel.findOne({
@@ -40,7 +40,7 @@ export const authOptions: NextAuthConfig = {
           if (!isPasswordCorrect) {
             throw new Error("Invalid password");
           } else {
-            return user;
+            return user as unknown as User;
           }
         } catch (error) {
           throw error;
@@ -77,10 +77,10 @@ export const authOptions: NextAuthConfig = {
         // Set the required id from token.sub and attach custom fields from the JWT
         if (!session.user) return session;
         session.user.id = (token.sub as string) || session.user.id;
-        (session.user as any)._id = token._id as string;
-        (session.user as any).isVerified = token.isVerified as boolean;
-        (session.user as any).isAcceptingMessages = token.isAcceptingMessages as boolean;
-        (session.user as any).username = token.username as string;
+        session.user._id = token._id as string;
+        session.user.isVerified = token.isVerified as boolean;
+        session.user.isAcceptingMessages = token.isAcceptingMessages as boolean;
+        session.user.username = token.username as string;
 
         return session;
       } catch (error) {
