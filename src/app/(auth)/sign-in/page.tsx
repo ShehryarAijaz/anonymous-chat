@@ -39,8 +39,11 @@ const Page = () => {
       })
 
       if (result?.error) {
-        setError(result.error)
-        toast.error(result.error)
+        const message = result.error === 'CredentialsSignin'
+          ? 'Invalid email or password'
+          : result.error
+        setError(message)
+        toast.error(message)
       } else if (result?.ok) {
         toast.success('Signed in successfully!')
         router.replace("/dashboard")

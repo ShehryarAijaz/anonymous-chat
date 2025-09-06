@@ -26,11 +26,11 @@ export const authOptions: NextAuthConfig = {
           });
 
           if (!user) {
-            throw new Error("User not found");
+            return null
           }
 
           if (!user.isVerified) {
-            throw new Error("Please verify your account before signing in.");
+            return null;
           }
 
           const isPasswordCorrect = await bcrypt.compare(
@@ -38,12 +38,12 @@ export const authOptions: NextAuthConfig = {
             user.password
           );
           if (!isPasswordCorrect) {
-            throw new Error("Invalid password");
+            return null;
           } else {
             return user as unknown as User;
           }
         } catch (error) {
-          throw error;
+          return null;
         }
       },
     }),
